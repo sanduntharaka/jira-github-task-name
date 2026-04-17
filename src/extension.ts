@@ -8,25 +8,35 @@ export function activate(context: vscode.ExtensionContext) {
   let disposable = vscode.commands.registerCommand(
     "extension.generateBranchName",
     async () => {
+      const issueType = await vscode.window.showQuickPick(["Epic", "Task"], {
+        placeHolder: "Is this Jira item an Epic or Task?",
+      });
+      if (!issueType) {
+        return;
+      }
+
       const jira = await vscode.window.showInputBox({
         prompt: "Enter Jira Code (e.g., AM-112)",
       });
-      if (!jira) {
+      if (!jira?.trim()) {
         return;
       }
 
       const desc = await vscode.window.showInputBox({
         prompt: "Enter short description",
       });
-      if (!desc) {
+      if (!desc?.trim()) {
         return;
       }
 
-      const branchName = `${jira}-${desc
+      const currentBranchName = `${jira.trim()}-${desc
         .trim()
         .toLowerCase()
         .replace(/\s+/g, "-")
         .replace(/[^a-z0-9\-]/g, "")}`;
+      const branchName =
+        issueType === "Task" ? `issue/${currentBranchName}` : currentBranchName;
+
       vscode.env.clipboard.writeText(branchName);
       vscode.window.showInformationMessage(`Branch name copied: ${branchName}`);
     }

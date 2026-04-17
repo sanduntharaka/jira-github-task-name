@@ -2,7 +2,7 @@
   "name": "jira-git-branch-name-generator",
   "displayName": "jira git branch name generator",
   "description": "use to generate branch names accrding to jira",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "engines": {
     "vscode": "^1.99.0"
   },
